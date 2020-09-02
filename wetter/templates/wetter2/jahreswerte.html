@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %} Wetter {% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script
+    src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+  
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        wdata={{history}};
+        oydata={{oy}};
+        vars={"TXK":{},"RSK":{},"SDK":{},"PM":{},"UPM":{}};
+        //var ii=0;
+        for ( var ii=0; ii<3;ii++){
+          ["TXK","RSK","SDK","PM","UPM"].forEach(
+            function createPlot(item,index){
+              
+              if (typeof wdata[ii][item] !== 'undefined'){
+                
+                ind=[];
+                wdata[ii][item]['index'].forEach(function(item){ind.push(item.slice(0,4))});
+                
+                vars[item][ii]={
+                  /*x:ind,*/
+                  x:wdata[ii][item]['data'],
+                  name: wdata[ii]["Stationsname"]+"/"+wdata[ii]["Bundesland"]+ " ["+wdata[ii]["Stationshoehe"]+"m] ("+parseInt(wdata[ii].von_datum/10000) +"-"+ parseInt(wdata[ii].bis_datum/10000) + ")",
+                  boxpoints: 'Outliers',
+                  jitter: 0.3,
+                  /*pointpos: -1.8,*/
+                  boxmean: true,
+                  type:'box'
+                };
+                
+              };
+             }
+          );
+        };
+        legende={"TXK":"Tagesmaximum der Lufttemperatur in 2m Höhe (°C)",
+          "RSK":"tägliche Niederschlagshöhe (mm)",
+          "SDK":"tägliche Sonnenscheindauer (h)",
+          "PM":"Tagesmittel des Luftdrucks (hPa)",
+          "UPM":"Tagesmittel der relativen Feuchte (%)"};
+        
+        Object.keys(legende).forEach(function(key) {
+          data=[]
+          
+          for (var i=0; i< Object.keys(vars[key]).length;i++){
+            console.log(vars[key][i]);
+            data.push(vars[key][i]);
+          };
+          var layout = {
+            title:legende[key],
+                xaxis: {
+                    autorange: true,
+                    showgrid: true,
+                    zeroline: true,
+                    dtick: 5,
+                    gridcolor: 'rgb(255, 255, 255)',
+                    gridwidth: 1,
+                    zerolinecolor: 'rgb(255, 255, 255)',
+                    zerolinewidth: 2
+                },
+                margin: {
+                    l: 40,
+                    r: 30,
+                    b: 80,
+                    t: 100
+                },
+                paper_bgcolor: 'rgb(243, 243, 243)',
+                plot_bgcolor: 'rgb(243, 243, 243)'
+          }
+          
+          Plotly.newPlot(key.toLowerCase()+"0",[...data],layout,{responsive: true});
+        });
+
+         t_data={};
+
+         for(var j=0; j<wdata.length;j++){
+            t_data[j]=[];
+            jQuery("#tab-tit"+j).html("<h3>"+wdata[j]["Stationsname"]+"</h3>");
+            for(var i=0; i< wdata[j]["TXK"]["index"].length; i++){
+              t_data[j].push(
+                {"Jahr":wdata[j]["TXK"]["index"][i].slice(0,4),
+                  "TXK":wdata[j]["TXK"]["data"][i]+" °C",
+                  "RSK":wdata[j]["RSK"]["data"][i]+" mm",
+                  "SDK":wdata[j]["SDK"]["data"][i]+ " h",
+                  "PM":wdata[j]["PM"]["data"][i] + " hPa",
+                  "UPM":wdata[j]["UPM"]["data"][i] + " %",
+                }
+
+              );
+
+            }
+            console.log('#tab'+j);
+            jQuery('#tab'+j).DataTable( {
+            data: t_data[j],
+            columns: [
+                { data: 'Jahr' },
+                { data: 'TXK' },
+                { data: 'RSK' },
+                { data: 'SDK' },
+                { data: 'PM' },
+                { data: 'UPM' }
+            ]
+             } );
+         };
+
+        
+
+        ["TXK","RSK","SDK","PM","UPM"].forEach(function oyplot(item){
+          var data = [
+            {
+              x: oydata["monattag"],
+              y: oydata[item]["mean"],
+              type: 'bar'
+            }
+          ];
+
+          Plotly.newPlot('oy'+item.toLowerCase(), data);
+
+        });
+
+      });
+    </script>
+
+  </head>
+  <body>
+
+    <div class="container">
+    <h1>Wie wird das Wetter?</h1>
+    
+    <p>Gewählter Ort:  {{geoBreite}}, {{geoLaenge}} </p>
+   
+
+    <p>Gewählter Tag:   {{monattag}} </p>
+    <h2>Zusammenfassung</h2>
+    <p>Für die Zusammenfassung wurden jeweils die Werte der drei nächstgelegenen Stationen zusammengefasst. Außerdem wurden die Werte von den Tagen vor bzw. nach dem gesuchten Tag mit in die Berechung einbezogen.</p>
+    <h3>Tagesmaximum der Temperatur</h3>
+    <p>Mittelwert: {{ aggr.TXK.mean }} °C  (nur für die Jahre ab 2010: {{ aggr.TXK.mean2010 }} °C )</p> 
+    <p>Größter Wert: {{aggr.TXK.max}} °C ({{aggr.TXK.max_year}})</p>
+    <p>Kleinster Wert: {{aggr.TXK.min}} °C ({{aggr.TXK.min_year}})</p>
+    <p>Spanne, in dem sich ca. 68% der Werte befinden: {{aggr.TXK.mean}} ±{{aggr.TXK.std}} °C</p>
+    <p>Messzeitraum: {{aggr.TXK.first_year}} – {{aggr.TXK.last_year}}</p>
+    <p>Zahl der Jahre mit Messung: {{aggr.TXK.count}}</p> 
+
+    <h3>Niederschläge</h3>
+    <p>An {{aggr.RSK.zerorain}} von {{aggr.RSK.count}} Messtagen gab es keinen Niederschlag.</p>
+    <p>Mittelwert: {{ aggr.RSK.mean }} mm (nur für die Jahre ab 2010: {{ aggr.RSK.mean2010 }} mm )</p>
+    <p>Größter Wert: {{aggr.RSK.max}} mm ({{aggr.RSK.max_year}})</p>
+    <p>Kleinster Wert: {{aggr.RSK.min}} mm ({{aggr.RSK.min_year}})</p>
+    <p>Spanne, in dem sich ca. 68% der Werte befinden: {{aggr.RSK.mean}} ±{{aggr.RSK.std}} mm</p>
+    <p>Messzeitraum: {{aggr.RSK.first_year}} – {{aggr.RSK.last_year}}</p>
+    <p>Zahl der Jahre mit Messung: {{aggr.RSK.count}}</p> 
+
+    <h3>Sonnenscheindauer</h3>
+    <p>An {{aggr.SDK.zerosun}} von {{aggr.SDK.count}} Messtagen war der Himmel durchweg bewölkt.</p>
+    <p>Mittelwert: {{ aggr.SDK.mean }} h  (nur für die Jahre ab 2010: {{ aggr.SDK.mean2010 }} h )</p>
+    <p>Größter Wert: {{aggr.SDK.max}} h ({{aggr.SDK.max_year}})</p>
+    <p>Kleinster Wert: {{aggr.SDK.min}} h ({{aggr.SDK.min_year}})</p>
+    <p>Spanne, in dem sich ca. 68% der Werte befinden: {{aggr.SDK.mean}} ±{{aggr.RSK.std}} h</p>
+    <p>Messzeitraum: {{aggr.SDK.first_year}} – {{aggr.SDK.last_year}}</p>
+    <p>Zahl der Jahre mit Messung: {{aggr.SDK.count}}</p> 
+
+
+    <h3>Luftdruck</h3>
+    <p>An {{aggr.PM.depressiondays}} von {{aggr.PM.count}} Messtagen waren Tiefdruckgebiete vorherrschend.</p>
+    <p>Mittelwert: {{ aggr.PM.mean }} hPa</p>
+    <p>Größter Wert: {{aggr.PM.max}} hPa ({{aggr.PM.max_year}})</p>
+    <p>Kleinster Wert: {{aggr.PM.min}} hPa ({{aggr.PM.min_year}})</p>
+    <p>Spanne, in dem sich ca. 68% der Werte befinden: {{aggr.PM.mean}} ±{{aggr.PM.std}} hPa</p>
+    <p>Messzeitraum: {{aggr.PM.first_year}} – {{aggr.PM.last_year}}</p>
+    <p>Zahl der Jahre mit Messung: {{aggr.PM.count}}</p> 
+  
+    <h3>Relative Luftfeuchte</h3>
+    <p>Mittelwert: {{ aggr.UPM.mean }} %</p>
+    <p>Größter Wert: {{aggr.UPM.max}} % ({{aggr.UPM.max_year}})</p>
+    <p>Kleinster Wert: {{aggr.UPM.min}} % ({{aggr.UPM.min_year}})</p>
+    <p>Spanne, in dem sich ca. 68% der Werte befinden: {{aggr.UPM.mean}} ±{{aggr.UPM.std}} %</p>
+    <p>Messzeitraum: {{aggr.UPM.first_year}} – {{aggr.UPM.last_year}}</p>
+    <p>Zahl der Jahre mit Messung: {{aggr.UPM.count}}</p> 
+
+    <h2>Wetterstationen in der Nähe</h2>
+      <ul>
+      {% for station in stationen %}
+      <li> <strong>{{station.0}}/{{station.1}}</strong><br>Entfernung: {{station.2}} km <br></li>
+      {% endfor %}
+      </ul>
+    <h2>Boxplot-Diagramme</h2>
+    <div class="">
+      <div id="txk0" class=""></div>
+    </div><br />
+    <div class="">
+      <div id="rsk0" class=""></div>
+    </div><br />
+    <div class="">
+      <div id="sdk0" class=""></div>
+    </div><br />
+    <div class="">
+      <div id="pm0" class=""></div>
+    </div><br />
+    <div class="">
+      <div id="upm0" class=""></div>
+
+    </div>
+ 
+    <br />
+    <h2> Daten-Tabellen</h2>
+    <div id="tab-tit0"></div>
+    <table id="tab0">
+      <thead>
+          <tr>
+              <th>Jahr</th>
+              <th>Temperatur (max.)</th>
+              <th>Niederschlag</th>
+              <th>Sonnenscheindauer</th>
+              <th>Luftdruck (Tagesdurchschnitt)</th>
+              <th>Relative Luftfeuchte (Tagesdurchschnitt) </th>
+          </tr>
+      </thead>
+    </table>
+    <br>
+    <div id="tab-tit1"></div>
+    <table id="tab1">
+      <thead>
+        <tr>
+            <th>Jahr</th>
+            <th>Temperatur (max.)</th>
+            <th>Niederschlag</th>
+            <th>Sonnenscheindauer</th>
+            <th>Luftdruck (Tagesdurchschnitt)</th>
+            <th>Relative Luftfeuchte (Tagesdurchschnitt) </th>
+        </tr>
+      </thead>
+    </table>
+    <br>
+    <div id="tab-tit2"></div>
+    <table id="tab2">
+      <thead>
+          <tr>
+              <th>Jahr</th>
+              <th>Temperatur (max.)</th>
+              <th>Niederschlag</th>
+              <th>Sonnenscheindauer</th>
+              <th>Luftdruck (Tagesdurchschnitt)</th>
+              <th>Relative Luftfeuchte (Tagesdurchschnitt) </th>
+          </tr>
+      </thead>
+    </table>
+
+
+    <h2>Ganzjahresvergleiche</h2>
+    <div id="oytxk"></div>
+    <div id="oyrsk"></div>
+    <div id="oysdk"></div>
+    <div id="oypm"></div>
+    <div id="oyupm"></div>
+  </div>
+
+
+ {% block footer %}
+
+ {% endblock %}
+
+
+  </body>
+</html>

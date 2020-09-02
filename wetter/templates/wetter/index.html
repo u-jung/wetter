@@ -1,0 +1,22 @@
+{% extends "wetter/base.html" %}
+{% load static %}
+
+
+     {% block content %}
+     <article class="box post post-excerpt">
+        <header>
+          <h2 class="weinrot">Wie könnte das Wetter werden?</h2>
+          <p>Wähle Ort und Tag für eine Vorhersage<sup>*</sup> aus. </p>
+        </header>
+        <section class="box search">
+            <form method="post" action="#" class="sd-6">
+              <input type="text" class="text" name="plz" placeholder="Ort" id="plz"/>
+              <br />
+              <input type="text" class="text" name="monattage" placeholder="Tag" id="monattage"/>
+              <br />
+
+            </form>
+        </section>
+        
+     </article>
+    {% endblock content %}
