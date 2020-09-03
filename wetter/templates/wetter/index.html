@@ -1,12 +1,65 @@
-{% extends "wetter/base.html" %}
-{% load static %}
+{% extends "wetter/base.html" %} {% load static %} {% block script %}
+<script>
+	$(document).ready(function(){
+        
+        
+        var monattag="";
+        var ort=""
+        jQuery('#plz').val("{{ort}}")
 
+        $('#plz').autocomplete({
+            minChars:3,
+            zIndex:10000,
+            serviceUrl: '{% url "wetter:plz" %}',
+            onSelect: function (suggestion) {
+                geo=suggestion.data;
+                ort=suggestion.value
+                r=newQuery();
+                console.log('You selected: ' + suggestion.value + ', ' + suggestion.data);
+                console.log(geo, monattag);
+            }
+        });
+        $('#monattage').autocomplete({
+            minChars:1,
+            zIndex:10000,
+            serviceUrl: '{% url "wetter:monattage" %}',
+            onSelect: function (suggestion) {
+                monattag=suggestion.data;
+                r=newQuery();
+                console.log('You selected: ' + suggestion.value + ', ' + suggestion.data);
+                console.log(geo, monattag);
+            }
+        });
 
-     {% block content %}
-     <article class="box post post-excerpt">
-        <header>
-          <h2 class="weinrot">Wie könnte das Wetter werden?</h2>
-          <p>Wähle Ort und Tag für eine Vorhersage<sup>*</sup> aus. </p>
+      function newQuery(){
+        if(geo!="" && monattag !=""){
+
+          console.log(window.location.href );
+          console.log(window.location.hostname );
+          console.log(window.location.pathname );
+          console.log(window.location.protocol );
+          var newPath=window.location.protocol  +"//"+window.location.hostname +"/daten/"+geo+"/"+monattag+"?ort="+ort;
+          var newPath="/daten/"+geo+"/"+monattag+"?ort="+ort;;
+          window.location.assign(newPath);
+          
+          /*window.location.assign('{ url "wetter:daten" ort=ort monattag=monattag }');*/
+        }
+
+      }
+      });
+</script>
+{% endblock %} {% block content %}
+
+<article class="box post post-excerpt">
+<header>
+    <h2 class="weinrot">{{error}}</h2>
+    
+</header> 
+</article>
+<article class="box post post-excerpt">
+	<header>
+		<h2 class="weinrot">Indoor oder Outdoor - wie wird das Wetter?</h2>
+		<p>Wähle Ort und Tag für eine Vorhersage<sup>*</sup> aus. </p>
         </header>
         <section class="box search">
             <form method="post" action="#" class="sd-6">
@@ -19,4 +72,44 @@
         </section>
         
      </article>
+    <article class="box post post-excerpt">
+        <header>
+          <h3 class="weinrot">Kann dieses Tool wirklich langfristig das Wetter vorhersagen?</h3>
+          
+        </header>
+        <p>
+            Natürlich nicht! Für eine gute Vorhersage sind immer noch die Meteorolog/innen zuständig.
+        </p>
+        <p>
+            Dieses Tool versucht nur, anhand der historischen Wetterdaten für einen bestimmten Tag eine Wahrscheinlichkeit für das zukünftige Wetter an diesem Tag zu bestimmen. Abgesehen davon, dass eine wissenschaftliche Vorhersage von vielen Faktoren abhängt und nur für einige Tage in die Zukunft reicht, gibt es noch andere Probleme. So liegen zum Beispiel zwei Tage mit gleichem Datum in zwei aufeinanderfolgenden Jahren mal 365, mal 366 Tage auseinander. Je nach Schaltjahr.
+        </p>
+        <p>
+            Ganz besonders aber lässt sich anhand der vorliegenden Daten serh gut aufzeigen, dass sich die Wettersituationen in den jüngsten Jahren stark verändert haben. Das Phänomen wird gemeinhin unter dem Begriff <a href="https://de.wikipedia.org/wiki/Klimawandel" target="_blank">Klimawandel</a> diskutiert.
+        </p>
+        <p>
+            Aber auch ohne Anspruch auf wissenschaftliche Exaktheit bietet dieses Tool genug Möglichkeiten für Aha-Effekte.<br>
+            Viel Spaß!
+        </p>
+    </article>
+
+
+    <article class="box post post-excerpt">
+        <header>
+          <h3 class="weinrot">Technischer Hintergrund</h3>
+          
+        </header>
+        <p>
+            Die Daten werden unter einer freien Lizenz vom Deutschen Wetterdienst (DWD) bereit gestellt. Sie stammen von über 1.200 Messstationen. Davon allerdings lieferten die meisten nur Daten für einige wenige Jahre bzw. Jahrzehnte. Diese Daten werden in den <a href="https://de.wikipedia.org/wiki/Box-Plot" target="_blank">Boxplot-Diagrammen</a> und Tabellen dargestellt.
+        </p>
+        <p>
+            Zur Berechnung einer Auswertung für einen bestimmten Ort werden zunächst die drei Wetterstationen bestimmt, die am nächsten liegen. Deren Daten werden daraufhin zusammengefasst und ergeben dann in der Regel eine Reihe über mehrere Jahrzehnte. 
+        </p>
+        <p>
+            In einem weiteren Schritt werden dann die Daten für den gesuchten Tag mit den Daten der beiden benachbarten Tage zusammengefasst. Diese Zusammenfassung ist die Bais für die Berechnung der Kennzahlen (z.B. Maximum, Minimum, Durchschnitt, usw.).
+        </p>
+        <p>
+            Unberücksichtigt blieben u.a. die unterschiedlichen Höhen der Messstationen und des gesuchten Ortes. Gerade im Hochgebirge gibt es häufig große Höhenunterschiede.
+            Unberücksichtigt blieb auch die Veränderung der Messmethoden und der Austausch der Messgeräte über die Zeit hinweg. So gab es zum Beispiel unterschiedliche Angaben zum Beginn einer Tagesmessung von Niederschlägen.
+        </p>
+    </article>
     {% endblock content %}

@@ -2,10 +2,10 @@
 
         
         /*oydata={{oy}};*/
-        vars={"TXK":{},"RSK":{},"SDK":{},"PM":{},"UPM":{}};
+        vars={"TXK":{}, "TNK":{},"RSK":{},"SDK":{},"PM":{},"UPM":{}};
         //var ii=0;
         for ( var ii=0; ii<3;ii++){
-          ["TXK","RSK","SDK","PM","UPM"].forEach(
+          ["TXK", "TNK", "RSK","SDK","PM","UPM"].forEach(
             function createPlot(item,index){
               
               if (typeof wdata[ii][item] !== 'undefined'){
@@ -16,7 +16,7 @@
                 vars[item][ii]={
                   /*x:ind,*/
                   x:wdata[ii][item]['data'],
-                  name: wdata[ii]["Stationsname"]+"/"+wdata[ii]["Bundesland"]+ " ["+wdata[ii]["Stationshoehe"]+"m] ("+parseInt(wdata[ii].von_datum/10000) +"-"+ parseInt(wdata[ii].bis_datum/10000) + ")",
+                  name: wdata[ii]["stationsname"]+"/"+wdata[ii]["bundesland"]+ " ["+wdata[ii]["stationshoehe"]+"m] ("+parseInt(wdata[ii].von_datum/10000) +"-"+ parseInt(wdata[ii].bis_datum/10000) + ")",
                   boxpoints: 'Outliers',
                   jitter: 0.3,
                   /*pointpos: -1.8,*/
@@ -28,7 +28,9 @@
              }
           );
         };
-        legende={"TXK":"Tagesmaximum der Lufttemperatur in 2m Höhe (°C)",
+        legende={
+           "TXK":"Tagesmaximum der Lufttemperatur in 2m Höhe (°C)",
+           "TNK":"Tagesminimum der Lufttemperatur in 2m Höhe (°C)",
           "RSK":"tägliche Niederschlagshöhe (mm)",
           "SDK":"tägliche Sonnenscheindauer (h)",
           "PM":"Tagesmittel des Luftdrucks (hPa)",
@@ -53,8 +55,9 @@
                     zerolinecolor: 'rgb(255, 255, 255)',
                     zerolinewidth: 2
                 },
+                yaxis:{},
                 margin: {
-                    l: 40,
+                    l: 0,
                     r: 30,
                     b: 80,
                     t: 100
@@ -70,11 +73,12 @@
 
          for(var j=0; j<wdata.length;j++){
             t_data[j]=[];
-            jQuery("#tab-tit"+j).html("<h3>"+wdata[j]["Stationsname"]+"</h3>");
+            jQuery("#tab-tit"+j).html("<h3>"+wdata[j]["stationsname"]+"</h3>");
             for(var i=0; i< wdata[j]["TXK"]["index"].length; i++){
               t_data[j].push(
                 {"Jahr":wdata[j]["TXK"]["index"][i].slice(0,4),
                   "TXK":wdata[j]["TXK"]["data"][i]+" °C",
+                  "TNK":wdata[j]["TNK"]["data"][i]+" °C",
                   "RSK":wdata[j]["RSK"]["data"][i]+" mm",
                   "SDK":wdata[j]["SDK"]["data"][i]+ " h",
                   "PM":wdata[j]["PM"]["data"][i] + " hPa",
@@ -86,10 +90,12 @@
             }
             console.log('#tab'+j);
             jQuery('#tab'+j).DataTable( {
+            "pageLength": 100,
             data: t_data[j],
             columns: [
                 { data: 'Jahr' },
                 { data: 'TXK' },
+                { data: 'TNK' },
                 { data: 'RSK' },
                 { data: 'SDK' },
                 { data: 'PM' },

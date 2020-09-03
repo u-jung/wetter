@@ -1,6 +1,5 @@
 .wert {
   font-size:1.2em;
-
 }
 
 .label{
@@ -11,6 +10,22 @@
   color: #c94663;
 }
 
+.weinrot-bck{
+    background-color: #c94663;
+    color: #FFF;
+    padding: 2.0em
+    
+}
+
+#content {
+    border-image-width:0;
+    border-bottom-color:#FFF;
+    box-shadow: none;
+}
+
+p {
+    font-size:1.2em;
+}
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
 .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
 .autocomplete-selected { background: #F0F0F0; }

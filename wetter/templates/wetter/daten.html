@@ -73,12 +73,12 @@
 				<div class="inner">
 						<article class="box post post-excerpt">
 							<header>
-								<h2 class="weinrot">Das Wetter am {{monattag}} in {{ort}}</h2>
+								<h2 class="weinrot">Das Wetter am {{monattag}} in {{ort}}{{bundesland}}</h2>
 								<p>Eine Übersicht historischer Daten</p>
 							</header>
-							<div class="info">
+							<!--<div class="info">
 								<span class="date"><span class="month">{{heutemonat}}<span>y</span></span> <span class="day">{{heutetag}}</span><span class="year"> {{heutejahr}}</span></span>
-							</div>
+							</div>-->
 							<!--<a href="#" class="image featured"><img src="{% static 'wetter/images/pic01.jpg' %}" alt="" /></a>-->
                 <p>
                 <strong>Geo-Koordinaten:</strong> {{geoBreite}}, {{geoLaenge}} <br />
@@ -107,6 +107,14 @@
                 <span class="label">Messzeitraum:</span> <span class="wert"> {{aggr.TXK.first_year}} – {{aggr.TXK.last_year}}</span><br />
                 <span class="label">Zahl der Jahre mit Messung:</span> <span class="wert"> {{aggr.TXK.count}}</span></p> 
 
+                <h3>Tagesminimum der Temperatur</h3>
+                <p><span class="label">Mittelwert:</span> <span class="wert">{{ aggr.TNK.mean }} °C</span>  (nur für die Jahre ab 2010: {{ aggr.TNK.mean2010 }} °C )<br />
+                <span class="label">Größter Wert:</span> <span class="wert"> {{aggr.TNK.max}} °C</span> ({{aggr.TNK.max_year}})<br />
+                <span class="label">Kleinster Wert:</span> <span class="wert"> {{aggr.TNK.min}} °C</span> ({{aggr.TNK.min_year}})<br />
+                <span class="label">Spanne, in dem sich ca. 68% der Werte befinden:</span> <span class="wert">  ±{{aggr.TNK.std}} °C</span><br />
+                <span class="label">Messzeitraum:</span> <span class="wert"> {{aggr.TNK.first_year}} – {{aggr.TNK.last_year}}</span><br />
+                <span class="label">Zahl der Jahre mit Messung:</span> <span class="wert"> {{aggr.TNK.count}}</span></p> 
+
                 <h3>Niederschläge</h3>
                 <p>An {{aggr.RSK.zerorain}} von {{aggr.RSK.count}} Messtagen gab es keinen Niederschlag.<br />
                 <span class="label">Mittelwert:</span> <span class="wert"> {{ aggr.RSK.mean }} mm</span> (nur für die Jahre ab 2010: {{ aggr.RSK.mean2010 }} mm )<br />
@@ -127,7 +135,7 @@
 
 
                 <h3>Luftdruck</h3>
-                <p>An {{aggr.PM.depressiondays}} von {{aggr.PM.count}} Messtagen waren Tiefdruckgebiete vorherrschend.<br />
+                <p>An {{aggr.PM.depression_days}} von {{aggr.PM.count}} Messtagen waren Tiefdruckgebiete vorherrschend.<br />
                 <span class="label">Mittelwert:</span> <span class="wert"> {{ aggr.PM.mean }} hPa</span><br />
                 <span class="label">Größter Wert:</span> <span class="wert"> {{aggr.PM.max}} hPa </span>({{aggr.PM.max_year}})<br />
                 <span class="label">Kleinster Wert:</span> <span class="wert"> {{aggr.PM.min}} hPa </span>({{aggr.PM.min_year}})<br />
@@ -136,7 +144,7 @@
                 <span class="label">Zahl der Jahre mit Messung:</span> <span class="wert"> {{aggr.PM.count}}</span></p> 
               
                 <h3>Relative Luftfeuchte</h3>
-                <span class="label">Mittelwert:</span> <span class="wert"> {{ aggr.UPM.mean }} %</span><br />
+                <p><span class="label">Mittelwert:</span> <span class="wert"> {{ aggr.UPM.mean }} %</span><br />
                 <span class="label">Größter Wert:</span> <span class="wert"> {{aggr.UPM.max}} % </span>({{aggr.UPM.max_year}})<br />
                 <span class="label">Kleinster Wert:</span> <span class="wert"> {{aggr.UPM.min}} % </span>({{aggr.UPM.min_year}})<br />
                 <span class="label">Spanne, in dem sich ca. 68% der Werte befinden:</span> <span class="wert">  ±{{aggr.UPM.std}} %</span><br />
@@ -154,6 +162,9 @@
               </header>
                 <div class="">
                   <div id="txk0" class=""></div>
+                </div><br />
+                <div class="">
+                  <div id="tnk0" class=""></div>
                 </div><br />
                 <div class="">
                   <div id="rsk0" class=""></div>
@@ -179,6 +190,7 @@
                     <tr>
                         <th>Jahr</th>
                         <th>Temperatur (max.)</th>
+                        <th>Temperatur (min.)</th>
                         <th>Niederschlag</th>
                         <th>Sonnenscheindauer</th>
                         <th>Luftdruck (Tagesdurchschnitt)</th>
@@ -193,6 +205,7 @@
                   <tr>
                       <th>Jahr</th>
                       <th>Temperatur (max.)</th>
+                      <th>Temperatur (min.)</th>
                       <th>Niederschlag</th>
                       <th>Sonnenscheindauer</th>
                       <th>Luftdruck (Tagesdurchschnitt)</th>
@@ -207,6 +220,7 @@
                     <tr>
                         <th>Jahr</th>
                         <th>Temperatur (max.)</th>
+                        <th>Temperatur (min.)</th>
                         <th>Niederschlag</th>
                         <th>Sonnenscheindauer</th>
                         <th>Luftdruck (Tagesdurchschnitt)</th>
@@ -233,3 +247,5 @@
             </form>
         </section>
         {% endblock search %}
+
+        {% block wetterscript %}<script src="{% static 'wetter/js/wetter.js' %}"></script> {% endblock %}
