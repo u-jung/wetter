@@ -1,1 +1,5 @@
-django
+Django==3.0.5
+geographiclib==1.50
+geopy==2.0.0
+django-heroku==0.3.1
+pandas==1.1.1
