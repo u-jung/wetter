@@ -14,5 +14,4 @@ python = "^3.8"
 pandas = "^1.1.1"
 geopy = "^2.0.0"
 django-pandas = "^0.6.2"
-django-matplotlib = "^0.1"
 [tool.poetry.dev-dependencies]
