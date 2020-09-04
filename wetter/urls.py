@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path
 from . import views
 from django.conf import settings
 
@@ -11,4 +11,3 @@ urlpatterns = [
     path("monattage/", views.monattage, name='monattage')
 ]
 
-#re_path(r'daten/(?P<geo>\w+)/(?P<monattag>\w+)/$', views.daten, name='daten'),

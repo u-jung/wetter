@@ -1,4 +1,6 @@
-{% extends "wetter/base.html" %} {% load static %} {% block script %}
+{% extends "wetter/base.html" %} 
+{% load static %} 
+{% block script %}
 <script>
 	$(document).ready(function(){
         
@@ -52,7 +54,7 @@
 
 <article class="box post post-excerpt">
 <header>
-    <h2 class="weinrot">{{error}}</h2>
+    <h2 class="weinrot" title="{{err_info}}">{{error}}</h2>
     
 </header> 
 </article>
