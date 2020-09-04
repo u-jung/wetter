@@ -19,7 +19,8 @@ def daten(request, geo, monattag):
         ort = ""
 
     p1 = geo.split(",")
-    try:
+    #try:
+    while 1==1:
         fc = Forecast(p1[0], p1[1], 100, monattag, 3)
         fc.get_aggregates()
         jstr = SafeString(fc.make_history())
@@ -48,12 +49,13 @@ def daten(request, geo, monattag):
                 "heutemonat": fc.get_month(heute.month)[0:3],
                 "heutejahr": heute.year
             })
-    except:
+    #except:
+    else:
         msg = "Entschuldigung, das hat leider nicht geklappt. \
         Wahrscheinlich gab es eine Problem mit der Bereitsstellung der Daten. \
         Versuche es bitte mit einen anderen Ort. "
         e = sys.exc_info()[0]
-        
+        #raise ValueError
         return render(request, "wetter/index.html", {"error": msg,"err_info":e})
 
 
