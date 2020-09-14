@@ -80,20 +80,18 @@
           
         </header>
         <p>
-            Natürlich nicht! Für eine gute Vorhersage sollten besser die  Meteorolog/innen befragt werden.
+            Natürlich nicht! Für eine gute Vorhersage sind immer noch die Meteorolog/innen zuständig.
         </p>
         <p>
             Dieses Tool versucht nur, anhand der historischen Wetterdaten für einen bestimmten Tag eine Wahrscheinlichkeit für das zukünftige Wetter an diesem Tag zu bestimmen. Abgesehen davon, dass eine wissenschaftliche Vorhersage von vielen Faktoren abhängt und nur für einige Tage in die Zukunft reicht, gibt es noch andere Probleme. So liegen zum Beispiel zwei Tage mit gleichem Datum in zwei aufeinanderfolgenden Jahren mal 365, mal 366 Tage auseinander. Je nach Schaltjahr.
         </p>
         <p>
-            Auch der <a href="https://de.wikipedia.org/wiki/Klimawandel" target="_blank">Klimawandel</a> wird sichtbar und macht eine auf historische Daten basierende Prognose kaum möglich.
+            Ganz besonders aber lässt sich anhand der vorliegenden Daten serh gut aufzeigen, dass sich die Wettersituationen in den jüngsten Jahren stark verändert haben. Das Phänomen wird gemeinhin unter dem Begriff <a href="https://de.wikipedia.org/wiki/Klimawandel" target="_blank">Klimawandel</a> diskutiert.
         </p>
         <p>
-            Aber auch ohne Anspruch auf wissenschaftliche Exaktheit bietet dieses Tool genug Möglichkeiten für Aha-Effekte.<br><br>
+            Aber auch ohne Anspruch auf wissenschaftliche Exaktheit bietet dieses Tool genug Möglichkeiten für Aha-Effekte.<br>
             Viel Spaß!
         </p>
-		<p>
-		</p>
     </article>
 
 
@@ -109,11 +107,11 @@
             Zur Berechnung einer Auswertung für einen bestimmten Ort werden zunächst die drei Wetterstationen bestimmt, die am nächsten liegen. Deren Daten werden daraufhin zusammengefasst und ergeben dann in der Regel eine Reihe über mehrere Jahrzehnte. 
         </p>
         <p>
-            In einem weiteren Schritt werden dann die Daten für den gesuchten Tag mit den Daten der beiden benachbarten Tage zusammengefasst. Diese Zusammenfassung ist die Basis für die Berechnung der Kennzahlen (z.B. Maximum, Minimum, Durchschnitt, usw.).
+            In einem weiteren Schritt werden dann die Daten für den gesuchten Tag mit den Daten der beiden benachbarten Tage zusammengefasst. Diese Zusammenfassung ist die Bais für die Berechnung der Kennzahlen (z.B. Maximum, Minimum, Durchschnitt, usw.).
         </p>
         <p>
-            Unberücksichtigt blieben u.a. die unterschiedlichen Höhen der Messstationen und des gesuchten Ortes. Gerade im Hochgebirge gibt es hier oft große Höhenunterschiede.
-            Unberücksichtigt blieb auch die Veränderung der Messmethoden und der Austausch der Messgeräte über die Jahre hinweg. So gab es zum Beispiel unterschiedliche Angaben zum Beginn einer Tagesmessung von Niederschlägen.
+            Unberücksichtigt blieben u.a. die unterschiedlichen Höhen der Messstationen und des gesuchten Ortes. Gerade im Hochgebirge gibt es häufig große Höhenunterschiede.
+            Unberücksichtigt blieb auch die Veränderung der Messmethoden und der Austausch der Messgeräte über die Zeit hinweg. So gab es zum Beispiel unterschiedliche Angaben zum Beginn einer Tagesmessung von Niederschlägen.
         </p>
     </article>
     {% endblock content %}

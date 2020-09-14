@@ -199,7 +199,7 @@ class Forecast():
         else:
             return pd.Series([np.NaN], index=["2020"+monattag])
 
-    def make_history(self):
+    def make_history(self) -> List[Dict]:
         """Create a data object ready for delivery"""
         list_ = []
         for e in self.stations:
@@ -370,8 +370,8 @@ class Forecast():
         return s
 
 
-class Plz():
-    """Handle ajax queries concerning postal codes 
+class Plz() -> dict:
+    """Handle ajax queries concerning postal codes. 
     
     Prepare the return value for the jquery.autocomplete element.
     """
@@ -393,7 +393,7 @@ class Plz():
 
 
 
-class Monattage():
+class Monattage() -> dict:
     """Handle ajax queries concerning date selection.
     
     Prepare the return value for the jquery.autocomplete element.
